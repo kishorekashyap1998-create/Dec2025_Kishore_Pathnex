@@ -1,0 +1,89 @@
+
+# day 01 — basics
+
+## 🔹 ansible task — install nginx on pathnex server
+
+rewrite this yaml manually:
+
+---
+- name: install nginx on kishore server
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: install nginx
+      yum:
+        name: nginx
+        state: present
+
+
+## 🔹 terraform task — create ec2 (c5.xlarge)
+
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_instance" "kishoreec2" {
+  ami           = "ami-0abcd1234abcd1234"
+  instance_type = "c5.xlarge"
+
+  tags = {
+    name = "kishore-ec2"
+  }
+}
+
+
+## 🔹 kubernetes task — create nginx pod
+
+apiversion: v1
+kind: pod
+metadata:
+  name: kishore-pod
+spec:
+  containers:
+    - name: web
+      image: nginx:latest
+      ports:
+        - containerport: 80
+
+
+## 🔹 shell script — print date & hostname
+
+#!/bin/bash
+echo "date: $(date)"
+echo "hostname: $(hostname)"
+
+
+# git integration
+## 🔹 jenkins pipeline — checkout git
+we will learn how to **checkout a git repository** and list files.
+
+pipeline {
+    agent any
+    stages {
+        stage('checkout') {
+            steps {
+                git branch: 'main', url: 'git@github.com:dec2025_kishore.git'
+            }
+        }
+        stage('list files') {
+            steps {
+                sh 'ls -la'
+            }
+        }
+    }
+}
+
+## 🔹 gitlab ci — checkout 
+we will learn how to **checkout a git repository in gitlab ci**.
+
+stages:
+  - checkout
+
+git-checkout:
+  stage: checkout
+  script:
+    - git clone git@github.com:dec2025_kishore.git
+    - cd sample-java-app
+    - ls -la
+
